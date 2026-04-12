@@ -1,0 +1,8 @@
+username: developergymer
+
+password: RQZHzgu4QMwjaU7C
+
+
+chai123
+
+mongodb+srv://developergymer:<db_password>@cluster0.gs2xpdr.mongodb.net
