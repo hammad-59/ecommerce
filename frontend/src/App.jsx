@@ -15,6 +15,7 @@ import About from "./pages/About";
 import ViewProduct from "./pages/ViewProduct"
 import UserLayout from "./components/layout/UserLayout";
 import Contact from "./components/Contact";
+import Cart from "./pages/Users/Cart";
 
 function App() {
 
@@ -83,6 +84,10 @@ function App() {
          {
           path: "singleProduct/:id",
           element: <ViewProduct/>
+        },
+         {
+          path: "cart",
+          element: <Cart/>
         },
       ]
     },

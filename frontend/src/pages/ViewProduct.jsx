@@ -4,6 +4,7 @@ import { getSingleProduct } from "../store/reducers/productSlice";
 import { NavLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { addToCart } from "../store/reducers/cartSlice";
 
 const ViewProduct = () => {
   const { selectedProduct, loading } = useSelector((state) => state.products);
@@ -96,7 +97,7 @@ const ViewProduct = () => {
           {/* Actions */}
           <div className="pt-4">
             {user ? (
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+              <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition" onClick={() => dispatch(addToCart({id, qty:1}))}>
                 Add to Cart
               </button>
             ) : (
