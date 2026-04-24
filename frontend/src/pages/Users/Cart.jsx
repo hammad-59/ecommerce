@@ -27,13 +27,13 @@ const Cart = () => {
             {cartItems?.items?.map((c) => (
               <li key={c._id}>
                 <img
-                  src={c.product.images[0].url}
-                  alt={c.product.name}
+                  src={c.product?.images?.[0]?.url}
+                  alt={c.product?.name}
                   width={100}
                   height={100}
                 />
-                <p>Name: {c.product.name}</p>
-                <p>Price: {c.product.price}</p>
+                <p>Name: {c.product?.name}</p>
+                <p>Price: {c.product?.price}</p>
                 <p>Qty: {c.quantity}</p>
               </li>
             ))}
