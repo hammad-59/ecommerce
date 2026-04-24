@@ -27,6 +27,7 @@ const cartSlice = createSlice({
     name: "carts",
     initialState: {
     cartItems: [],
+    totalPrice: 0,
     loading: false,
     error: null
     },
@@ -60,6 +61,7 @@ const cartSlice = createSlice({
         .addCase(getCart.fulfilled, (state, action) => {
             state.loading = false
             state.cartItems = action.payload.data.cart
+            state.totalPrice = action.payload.data.total
             state.error = null
         })
 
