@@ -53,7 +53,6 @@ const cartSlice = createSlice({
         .addCase(addToCart.fulfilled, (state, action) => {
             state.loading = false;
             state.cartItems = action.payload.data.cart
-            state.totalPrice = action.payload.data.total
             state.error = null
         })
 
@@ -80,17 +79,12 @@ const cartSlice = createSlice({
             state.error = action.payload.message
         })
 
-        .addCase(cartQuantity.pending, (state, action) => {
-  const { productId, qty } = action.meta.arg
+        .addCase(cartQuantity.pending, (state) => {
+            state.loading = true
+            state.error = null
+        })
 
-  const item = state.cartItems.items?.find(
-    (i) => i.product._id === productId
-  )
-
-  if (item) {
-    item.quantity += qty
-  }
-})
+    
         .addCase(cartQuantity.fulfilled, (state, action) => {
             state.loading = false
           state.cartItems = action.payload.data.cart

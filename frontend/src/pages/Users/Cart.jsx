@@ -1,29 +1,30 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cartQuantity, getCart } from "../../store/reducers/cartSlice";
+import PageLoader from "../../components/PageLoader"
 
 const Cart = () => {
   const dispatch = useDispatch();
 
   const { cartItems, totalPrice, loading } = useSelector(
-    (state) => state.carts,
+    (state) => state.carts
   );
 
     const handleIncrement = (id) => {
         dispatch(cartQuantity({productId: id, qty: 1}))
+         dispatch(getCart())
     }
 
 
   useEffect(() => {
     dispatch(getCart());
-    handleIncrement()
   }, [dispatch]);
 
 
 
   return (
     <div>
-      {loading && <p>loading</p>}
+      {loading && <PageLoader/>}
       <div>
         {!cartItems?.items || cartItems.items.length === 0 ? (
           <>

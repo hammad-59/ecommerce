@@ -1,6 +1,5 @@
 
-import { useDispatch, useSelector } from "react-redux";
-import { getCart } from "../../store/reducers/cartSlice";
+import { useSelector } from "react-redux";
 import { useLogout } from "../Logout";
 import Navbar from "../Navbar"
 import { NavLink } from 'react-router-dom';
@@ -8,12 +7,7 @@ import { useEffect } from "react";
 
 const UserNavbar = () => {
     const handleLogout = useLogout()
-    const { cartItems } = useSelector(state => state.carts)
-    const dispatch = useDispatch()
-
-     useEffect(() => {
-        dispatch(getCart())
-      }, [dispatch])
+    const { cartItems, loading } = useSelector(state => state.carts)
 
     return (
     <>

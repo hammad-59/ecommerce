@@ -5,6 +5,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { addToCart } from "../store/reducers/cartSlice";
+import PageLoader from "../components/PageLoader";
 
 const ViewProduct = () => {
   const { selectedProduct, loading } = useSelector((state) => state.products);
@@ -27,16 +28,13 @@ const ViewProduct = () => {
     }
   }, [selectedProduct]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  
 
   return (
+
     <div className="max-w-6xl mx-auto p-6">
+
+      {loading && <PageLoader/>}
       
       {/* Back Button */}
       <button
