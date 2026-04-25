@@ -20,6 +20,15 @@ export const getCart  = createAsyncThunk("/cart/getCart", async(_, {rejectWithVa
    }
 })
 
+export const cartQuantity  = createAsyncThunk("/cart/cartQuantity", async( {productId, qty}, {rejectWithValue}) => {
+   try {
+         const res = await axiosInstance.put("/cart/cartQuantity", {productId, qty})
+         return res.data
+   } catch (error) {
+          return rejectWithValue(error.response?.data || error.message);
+   }
+})
+
 
 
 
@@ -43,7 +52,8 @@ const cartSlice = createSlice({
 
         .addCase(addToCart.fulfilled, (state, action) => {
             state.loading = false;
-            state.cartItems = action.payload.data;
+            state.cartItems = action.payload.data.cart
+            state.totalPrice = action.payload.data.total
             state.error = null
         })
 
@@ -66,6 +76,27 @@ const cartSlice = createSlice({
         })
 
         .addCase(getCart.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload.message
+        })
+
+        .addCase(cartQuantity.pending, (state, action) => {
+  const { productId, qty } = action.meta.arg
+
+  const item = state.cartItems.items?.find(
+    (i) => i.product._id === productId
+  )
+
+  if (item) {
+    item.quantity += qty
+  }
+})
+        .addCase(cartQuantity.fulfilled, (state, action) => {
+            state.loading = false
+          state.cartItems = action.payload.data.cart
+            state.totalPrice = action.payload.data.total
+        })
+        .addCase(cartQuantity.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload.message
         })

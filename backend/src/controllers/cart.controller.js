@@ -66,8 +66,49 @@ const addToCart = asyncHandler(async (req, res) => {
   );
 })
 
+
+
+  const cartQuantity = asyncHandler(async (req, res) => {
+    const {productId, qty} = req.body
+
+    const userId = req.user?._id
+
+    if (!productId) {
+    throw new ApiError(400, "productId is required");
+  }
+
+    if (typeof qty !== "number") {
+        throw new ApiError(400, "quantity should be number")
+    }
+
+    const cart = await Cart.findOne({user:userId})
+
+      if (!cart) {
+    throw new ApiError(404, "Cart not found");
+  }
+
+    const item = cart?.items?.find(i => i.product.toString() === productId)
+
+     if (!item) {
+    throw new ApiError(404, "Product not in cart");
+  }
+
+      item.quantity += qty
+
+    await cart.save()
+
+     const total = cart.items.reduce((acc, item) => {
+    return acc + item.product.price * item.quantity;
+  }, 0);
+
+
+    return res.status(200).json( new ApiResponse(200, {cart, total}, "quantity updated"))
+
+  })
+
 export { 
     addToCart,
-    getCart
+    getCart,
+    cartQuantity
 
  };

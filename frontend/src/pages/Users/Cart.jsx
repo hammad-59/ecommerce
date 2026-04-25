@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCart } from "../../store/reducers/cartSlice";
+import { cartQuantity, getCart } from "../../store/reducers/cartSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -9,14 +9,21 @@ const Cart = () => {
     (state) => state.carts,
   );
 
+    const handleIncrement = (id) => {
+        dispatch(cartQuantity({productId: id, qty: 1}))
+    }
+
+
   useEffect(() => {
     dispatch(getCart());
+    handleIncrement()
   }, [dispatch]);
 
-  if (loading) return <p>Loading...</p>;
+
 
   return (
     <div>
+      {loading && <p>loading</p>}
       <div>
         {!cartItems?.items || cartItems.items.length === 0 ? (
           <>
@@ -35,6 +42,7 @@ const Cart = () => {
                 <p>Name: {c.product?.name}</p>
                 <p>Price: {c.product?.price}</p>
                 <p>Qty: {c.quantity}</p>
+                <button onClick={() => handleIncrement(c.product._id)}>Inc</button>
               </li>
             ))}
             <h2>total price: {totalPrice}</h2>
