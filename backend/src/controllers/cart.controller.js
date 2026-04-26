@@ -36,9 +36,11 @@ const addToCart = asyncHandler(async (req, res) => {
     );
   }
 
+  const cartLength = cart.items.length
+
   return res
     .status(200)
-    .json(new ApiResponse(200, cart, "Cart Added Successfully"));
+    .json(new ApiResponse(200, {cart, cartLength}, "Cart Added Successfully"));
 });
 
 
@@ -61,8 +63,10 @@ const addToCart = asyncHandler(async (req, res) => {
     return acc + item.product.price * item.quantity;
   }, 0);
 
+    const cartLength = cart.items.length
+
   return res.status(200).json(
-    new ApiResponse(200, { cart, total }, "Cart fetched successfully")
+    new ApiResponse(200, { cart, total, cartLength }, "Cart fetched successfully")
   );
 })
 
@@ -84,7 +88,7 @@ const addToCart = asyncHandler(async (req, res) => {
 
   const cart = await Cart.findOne({ user: userId }).populate({
     path: "items.product",
-    select: "name price images"
+    select: "name price images stock"
   });
 
   if (!cart) {
@@ -105,7 +109,7 @@ const addToCart = asyncHandler(async (req, res) => {
 
   const total = cart.items.reduce((acc, item) => {
     return acc + item.product.price * item.quantity;
-  }, 0);
+  }, 0);  
 
   return res.status(200).json(
     new ApiResponse(200, { cart, total }, "quantity updated")

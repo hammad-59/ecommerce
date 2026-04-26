@@ -6,13 +6,18 @@ import PageLoader from "../../components/PageLoader"
 const Cart = () => {
   const dispatch = useDispatch();
 
-  const { cartItems, totalPrice, loading } = useSelector(
+  const { cartItems, totalPrice, loading, totalLength } = useSelector(
     (state) => state.carts
   );
 
     const handleIncrement = (id) => {
         dispatch(cartQuantity({productId: id, qty: 1}))
          dispatch(getCart())
+    }
+
+    const handleDecrement = (id) => {
+      dispatch(cartQuantity({productId: id, qty: -1}))
+      dispatch(getCart())
     }
 
 
@@ -43,7 +48,10 @@ const Cart = () => {
                 <p>Name: {c.product?.name}</p>
                 <p>Price: {c.product?.price}</p>
                 <p>Qty: {c.quantity}</p>
-                <button onClick={() => handleIncrement(c.product._id)}>Inc</button>
+                <span className="text-red-600">{c.product?.stock <= c.quantity && "Out of stock"}</span>
+                <button onClick={() => handleIncrement(c.product._id)} disabled = {c.product?.stock <= c.quantity}>increment</button>
+                <button onClick={() => handleDecrement(c.product._id)} disabled = {c.quantity === 1}>decrement</button>
+                <button>remove</button>
               </li>
             ))}
             <h2>total price: {totalPrice}</h2>
