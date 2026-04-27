@@ -71,7 +71,6 @@ const addToCart = asyncHandler(async (req, res) => {
 })
 
 
-
   const cartQuantity = asyncHandler(async (req, res) => {
   const { productId, qty } = req.body;
 
@@ -116,9 +115,36 @@ const addToCart = asyncHandler(async (req, res) => {
   );
 });
 
+
+
+const removeCart = asyncHandler(async (req, res) => {
+
+      const {productId} = req.body
+
+      if (!productId) {
+          throw new ApiError(400, "product id not found")
+      }
+
+      const userId = req.user?._id
+
+      const cart = await Cart.findOne({user: userId})
+
+      if (!cart) {
+          throw new ApiError(404, "cart item not found")
+      }
+
+
+      cart.items = cart.items.filter((i) => i.product.toString() !== productId)
+
+      await cart.save()
+
+      return res.status(200).json(new ApiResponse(200, cart, "item deleted successfully"))
+})
+
 export { 
     addToCart,
     getCart,
-    cartQuantity
+    cartQuantity,
+    removeCart
 
  };

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { cartQuantity, getCart } from "../../store/reducers/cartSlice";
+import { cartQuantity, getCart, removeCart } from "../../store/reducers/cartSlice";
 import PageLoader from "../../components/PageLoader"
 
 const Cart = () => {
@@ -12,12 +12,14 @@ const Cart = () => {
 
     const handleIncrement = (id) => {
         dispatch(cartQuantity({productId: id, qty: 1}))
-         dispatch(getCart())
     }
 
     const handleDecrement = (id) => {
       dispatch(cartQuantity({productId: id, qty: -1}))
-      dispatch(getCart())
+    }
+
+    const handleRemoveCart = (id) => {
+      dispatch(removeCart(id))
     }
 
 
@@ -51,7 +53,7 @@ const Cart = () => {
                 <span className="text-red-600">{c.product?.stock <= c.quantity && "Out of stock"}</span>
                 <button onClick={() => handleIncrement(c.product._id)} disabled = {c.product?.stock <= c.quantity}>increment</button>
                 <button onClick={() => handleDecrement(c.product._id)} disabled = {c.quantity === 1}>decrement</button>
-                <button>remove</button>
+                <button onClick={() => handleRemoveCart(c.product._id)}>remove</button>
               </li>
             ))}
             <h2>total price: {totalPrice}</h2>
