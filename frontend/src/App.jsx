@@ -16,9 +16,16 @@ import ViewProduct from "./pages/ViewProduct"
 import UserLayout from "./components/layout/UserLayout";
 import Contact from "./components/Contact";
 import Cart from "./pages/Users/Cart";
+import Checkout from "./pages/Users/Checkout";
+import { loadStripe } from "@stripe/stripe-js"
+import { Elements } from "@stripe/react-stripe-js"
+import AllOrders from "./pages/Admin/AllOrders";
+import UserOrders from "./pages/Users/UserOrders";
+
+
+const stripePromise = loadStripe("pk_test_51TUVvLDMrNUSHmhmqFD0awzPI12ZzQEIlE6qTPO86QPO3YLDmgT87MggT1XR4yD5VEoxLS02Sy3mCovBOgqgSCBF00v8OaKFXZ")
 
 function App() {
-
 
   const router = createBrowserRouter([
     
@@ -89,6 +96,18 @@ function App() {
           path: "cart",
           element: <Cart/>
         },
+         {
+          path: "checkout",
+          element:(
+            <Elements stripe={stripePromise}>
+              <Checkout />
+            </Elements>
+          )
+        },
+        {
+          path: "userOrders",
+          element: <UserOrders/>
+        },
       ]
     },
 
@@ -124,6 +143,10 @@ function App() {
         {
           path: "singleProduct/:id",
           element: <SingleProduct />
+        },
+        {
+          path: "allorders",
+          element: <AllOrders />
         },
     
       ]

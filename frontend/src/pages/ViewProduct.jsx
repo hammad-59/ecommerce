@@ -4,11 +4,13 @@ import { getSingleProduct } from "../store/reducers/productSlice";
 import { NavLink, useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import { addToCart } from "../store/reducers/cartSlice";
+import { addToCart, getCart } from "../store/reducers/cartSlice";
 import PageLoader from "../components/PageLoader";
 
 const ViewProduct = () => {
   const { selectedProduct, loading } = useSelector((state) => state.products);
+  const { cartItems } = useSelector((state) => state.carts);
+  const cartLoading = useSelector((state) => state.carts.loading);
   const { auth } = useAuth();
   const user = auth?.user;
 
@@ -28,14 +30,23 @@ const ViewProduct = () => {
     }
   }, [selectedProduct]);
 
-  
+  const cartProduct = cartItems?.items?.find(
+    (item) =>
+      item.product?._id?.toString() === selectedProduct?._id?.toString(),
+  );
+
+  const currentQty = cartProduct?.quantity ?? 0;
+
+  const stock = selectedProduct?.stock ?? 0;
+
+  const isOutOfStock = currentQty >= stock;
+
+  const dataStock = stock - currentQty;
 
   return (
-
     <div className="max-w-6xl mx-auto p-6">
+      {loading && <PageLoader />}
 
-      {loading && <PageLoader/>}
-      
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
@@ -45,7 +56,6 @@ const ViewProduct = () => {
       </button>
 
       <div className="grid place-items-center grid-cols-1 md:grid-cols-2 gap-10 bg-white p-6 rounded-2xl shadow-lg">
-
         {/* Images Section */}
         <div>
           {/* Main Image */}
@@ -73,7 +83,6 @@ const ViewProduct = () => {
 
         {/* Details Section */}
         <div className="space-y-4">
-
           <h1 className="text-3xl font-bold">{selectedProduct?.name}</h1>
 
           <p className="text-gray-600">{selectedProduct?.description}</p>
@@ -83,19 +92,56 @@ const ViewProduct = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-3 text-sm text-gray-700">
-            <p><span className="font-medium">Category:</span> {selectedProduct?.category}</p>
-            <p><span className="font-medium">Sub:</span> {selectedProduct?.subCategory}</p>
-            <p><span className="font-medium">Color:</span> {selectedProduct?.color}</p>
-            <p><span className="font-medium">Stock:</span> {selectedProduct?.stock}</p>
-            <p><span className="font-medium">Brand:</span> {selectedProduct?.brand?.name}</p>
-            <p><span className="font-medium">{selectedProduct?.gender ? "Gender:" : ""}</span> {selectedProduct?.gender}</p>
-            <p><span className="font-medium">{selectedProduct?.productSize ? "Size:" : ""}</span> {selectedProduct?.productSize}</p>
+            <p>
+              <span className="font-medium">Category:</span>{" "}
+              {selectedProduct?.category}
+            </p>
+            <p>
+              <span className="font-medium">Sub:</span>{" "}
+              {selectedProduct?.subCategory}
+            </p>
+            <p>
+              <span className="font-medium">Color:</span>{" "}
+              {selectedProduct?.color}
+            </p>
+            <p>
+              <span className="font-medium">Stock:</span>{" "}
+              {cartLoading ? "Loading..." : dataStock}
+            </p>
+            <p>
+              <span className="font-medium">Brand:</span>{" "}
+              {selectedProduct?.brand?.name}
+            </p>
+            <p>
+              <span className="font-medium">
+                {selectedProduct?.gender ? "Gender:" : ""}
+              </span>{" "}
+              {selectedProduct?.gender}
+            </p>
+            <p>
+              <span className="font-medium">
+                {selectedProduct?.productSize ? "Size:" : ""}
+              </span>{" "}
+              {selectedProduct?.productSize}
+            </p>
+            <p>
+              <span className="font-medium text-red-600">
+                {isOutOfStock && "out of stock"}
+              </span>
+            </p>
           </div>
 
           {/* Actions */}
           <div className="pt-4">
             {user ? (
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition" onClick={() => dispatch(addToCart({id, qty:1}))}>
+              <button
+                className={ isOutOfStock ? "w-full bg-gray-400 text-white py-3 rounded-lg": "w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"}
+                onClick={async () => {
+                  await dispatch(addToCart({ id, qty: 1 }));
+                  dispatch(getCart());
+                }}
+                disabled={isOutOfStock}
+              >
                 Add to Cart
               </button>
             ) : (
@@ -107,7 +153,6 @@ const ViewProduct = () => {
               </NavLink>
             )}
           </div>
-
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cartQuantity, getCart, removeCart } from "../../store/reducers/cartSlice";
 import PageLoader from "../../components/PageLoader"
+import { NavLink } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -60,6 +61,8 @@ const Cart = () => {
           </ul>
         )}
       </div>
+
+      <NavLink to = "/user/checkout" >Check Out</NavLink>
     </div>
   );
 };

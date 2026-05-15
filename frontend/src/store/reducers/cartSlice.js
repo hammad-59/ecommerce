@@ -44,7 +44,7 @@ export const removeCart  = createAsyncThunk("/cart/removeCart", async( productId
 const cartSlice = createSlice({
     name: "carts",
     initialState: {
-    cartItems: [],
+    cartItems: { items: [] },
     totalPrice: 0,
     totalLength: 0,
     loading: false,
@@ -91,15 +91,8 @@ const cartSlice = createSlice({
           })
 
           .addCase(cartQuantity.pending, (state, action) => {
-            const { productId, qty } = action.meta.arg;
-
-            const item = state.cartItems.items?.find(
-              (i) => i.product._id === productId,
-            );
-
-            if (item) {
-              item.quantity += qty;
-            }
+            state.loading = true;
+            state.error = null
           })
 
           .addCase(cartQuantity.fulfilled, (state, action) => {
