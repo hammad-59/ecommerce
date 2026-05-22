@@ -228,7 +228,7 @@ const changingStatus = asyncHandler(async (req, res) => {
 const userTrackingOrder = asyncHandler( async(req, res) => {
     const userId = req.user._id
 
-    const order = await Order.find({user: userId}).populate("items.product")
+    const order = await Order.find({user: userId}).sort({ createdAt: -1 }).populate("items.product")
 
     return res.status(200).json(
         new ApiResponse(200, order, "order status tracking send")
