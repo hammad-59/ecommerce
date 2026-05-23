@@ -192,7 +192,7 @@ const adminViewOrders = asyncHandler ( async (req, res) => {
         }
     }
 
-    const order = await Order.find(filter).populate({path: "items.product",
+    const order = await Order.find(filter).sort({ createdAt: -1 }).populate({path: "items.product",
       select: "name price images"})
 
     return res.status(200).json( new ApiResponse( 200, order, "All orders fetched"))
