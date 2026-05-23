@@ -14,7 +14,7 @@ const Navbar = ({ children }) => {
       </div>
 
       {/* Desktop Links */}
-      <div className="hidden md:flex gap-6 items-center">
+      <div className="hidden md:flex gap-4 items-center">
         {children}
       </div>
 
