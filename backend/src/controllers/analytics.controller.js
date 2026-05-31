@@ -29,7 +29,7 @@ const totalRevenueAnalytics = asyncHandler (async (req, res) => {
 
 
 const orderAnalytics = asyncHandler (async (req, res) => {
-    const orders = await Order.aggregate([
+    const statusOfOrders = await Order.aggregate([
   {
     $group: {
       _id: null,
@@ -63,7 +63,7 @@ const orderAnalytics = asyncHandler (async (req, res) => {
 
 
 return res.status(200).json(
-  new ApiResponse(200, orders,
+  new ApiResponse(200, statusOfOrders,
     "Order analytics fetched"
   )
 )
@@ -77,6 +77,9 @@ const topSellingProductsAnalytics = asyncHandler(async (req, res) => {
     {
       $group: {
         _id: "$items.product",
+        name: {
+          $first: "$items.name",
+        },
         totalSold: {
           $sum: "$items.quantity",
         },

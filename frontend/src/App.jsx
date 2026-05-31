@@ -21,6 +21,7 @@ import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 import AllOrders from "./pages/Admin/AllOrders";
 import UserOrders from "./pages/Users/UserOrders";
+import Analytics from "./pages/Admin/Analytics";
 
 
 const stripePromise = loadStripe("pk_test_51TUVvLDMrNUSHmhmqFD0awzPI12ZzQEIlE6qTPO86QPO3YLDmgT87MggT1XR4yD5VEoxLS02Sy3mCovBOgqgSCBF00v8OaKFXZ")
@@ -147,6 +148,10 @@ function App() {
         {
           path: "allorders",
           element: <AllOrders />
+        },
+        {
+          path: "analytics",
+          element: <Analytics />
         },
     
       ]
