@@ -133,7 +133,7 @@ const AllOrders = () => {
                           </p>
                         </div>
 
-                        <p className="font-semibold">${item.price}</p>
+                        <p className="font-semibold">Rs.{item.price}</p>
                       </div>
                     ))}
                   </div>

@@ -15,7 +15,7 @@ const totalRevenueAnalytics = asyncHandler (async (req, res) => {
         throw new ApiError(404, "no orders found")
     }
 
-    const totalRevenue = orders.reduce((acc, order) => acc + order.totalAmount, 0)
+    const totalRevenue = orders.filter(order => order.orderStatus === "delivered").reduce((acc, orderSum) => acc + orderSum.totalAmount, 0)
 
         return res.status(200).json(
             new ApiResponse(
@@ -73,6 +73,7 @@ return res.status(200).json(
 
 const topSellingProductsAnalytics = asyncHandler(async (req, res) => {
   const topSellingProducts = await Order.aggregate([
+    { $match: {orderStatus: "delivered"} },
     { $unwind: "$items" },
     {
       $group: {
