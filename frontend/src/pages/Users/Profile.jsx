@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getCurrentUser,
   updateAccountDetails,
-  changePassword
+  changePassword,
+  refreshAccessToken
 } from '../../store/reducers/userSlice';
 
 const Profile = () => {
@@ -24,6 +25,7 @@ const Profile = () => {
 
   useEffect(() => {
     dispatch(getCurrentUser());
+    dispatch(refreshAccessToken())
   }, [dispatch]);
 
   useEffect(() => {

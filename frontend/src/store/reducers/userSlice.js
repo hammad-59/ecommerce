@@ -58,6 +58,24 @@ export const changePassword = createAsyncThunk("/users/changePassword", async (u
 })
 
 
+
+export const refreshAccessToken = createAsyncThunk(
+    "/users/refresh-token",
+    async (_, thunkAPI) => {
+        try {
+            const res = await axiosInstance.post("/users/refresh-token");
+
+            return res.data;
+
+        } catch (error) {
+            return thunkAPI.rejectWithValue(
+                error.response?.data || error.message
+            );
+        }
+    }
+)
+
+
 const usersSlice = createSlice({
     name: "users",
     initialState: {
@@ -67,7 +85,16 @@ const usersSlice = createSlice({
         error: null,
         isAuthenticated: false
     },
-    reducers : {},
+    reducers : {
+        setAccessToken: (state, action) => {
+        state.accessToken = action.payload;
+    },
+
+    logout: (state) => {
+        state.user = null;
+        state.accessToken = null;
+    }
+    },
 
 
     extraReducers: (builder) => {
@@ -156,11 +183,28 @@ const usersSlice = createSlice({
           .addCase(changePassword.rejected, (state, action) => {
                   state.loading = false
                    state.error = action.payload?.message || action.error.message;
-          })       
+          }) 
+          
+          
+          .addCase(refreshAccessToken.pending, (state) => {
+            state.loading = true,
+            state.error = null
+        })
+
+        .addCase(refreshAccessToken.fulfilled, (state, action) => {
+            state.loading = false
+            state.accessToken = action.payload.data.accessToken
+        })
+
+        .addCase(refreshAccessToken.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload?.message
+        })
+
     }
 
 
 })
 
-
+export const { setAccessToken, logout } = usersSlice.actions;
 export default usersSlice.reducer
