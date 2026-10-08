@@ -11,7 +11,6 @@ import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Users/Profile";
 import PublicLayout from "./components/layout/PublicLayout";
-import About from "./pages/About";
 import ViewProduct from "./pages/ViewProduct"
 import UserLayout from "./components/layout/UserLayout";
 import Contact from "./components/Contact";
